@@ -31,8 +31,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
   late Marker destination;
   late Set<Polyline> polylines;
   Set<Polyline> _polyLines = Set<Polyline>();
-  Polyline rasta = Polyline(
-    polylineId: PolylineId('rasta'),
+  Polyline rasta = const Polyline(
+    polylineId: const PolylineId('rasta'),
     color: Colors.red,
     width: 3,
     points: [],
@@ -87,7 +87,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     _polyLines.add(
       Polyline(
         polylineId: PolylineId(polyLineIdVal),
-        color: Color.fromARGB(255, 0, 207, 131),
+        color: const Color.fromARGB(255, 0, 207, 131),
         points: points.map((e) => LatLng(e.latitude, e.longitude)).toList(),
         width: 3,
       ),

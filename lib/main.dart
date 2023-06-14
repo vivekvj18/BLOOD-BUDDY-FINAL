@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -25,7 +24,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   );
   // SLocalNotification.initialize();
   // SLocalNotification.show(message);
-  print('Handling a background message: ${message.messageId}');
+  log('Handling a background message: ${message.messageId}');
 }
 
 AndroidNotificationChannel channel = const AndroidNotificationChannel(
@@ -43,7 +42,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> _firebaseMessgingBackgroundHandler(RemoteMessage message) async {
   FlutterLocalNotificationsPlugin();
-  print('A bg message arrived: ${message.data}');
+  log('A bg message arrived: ${message.data}');
 }
 
 void main() async {
@@ -52,6 +51,7 @@ void main() async {
     //name: 'bloodbuddyfinal',
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  
   FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<

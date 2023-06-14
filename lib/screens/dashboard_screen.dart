@@ -1,23 +1,21 @@
+import 'dart:async';
 import 'dart:developer';
 
+import 'package:bloodbuddyfinal/blocs/application_bloc.dart';
+import 'package:bloodbuddyfinal/models/markers_model.dart';
 import 'package:bloodbuddyfinal/models/user_model.dart';
+import 'package:bloodbuddyfinal/screens/sidebar_screen.dart';
+import 'package:bloodbuddyfinal/screens/station_details_page.dart';
+import 'package:bloodbuddyfinal/utils/mapStyle.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:bloodbuddyfinal/blocs/application_bloc.dart';
-import 'package:bloodbuddyfinal/models/markers_model.dart';
-import 'dart:async';
-import 'package:bloodbuddyfinal/screens/sidebar_screen.dart';
-import 'package:bloodbuddyfinal/screens/station_details_page.dart';
-import 'package:bloodbuddyfinal/utils/mapStyle.dart';
 
 class DashBoardScreen extends StatefulWidget {
   late User auth;
@@ -45,13 +43,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   void initState() {
+       FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance; // Change here
+    _firebaseMessaging.getToken().then((token){
+      log("token is $token");
+  });
     if (functioncalled) {
       // setState(() {
       //   functioncalled = false;
       // });
       setState(() {
-        final applicationBloc =
-            Provider.of<ApplicationBloc>(context, listen: false);
         //applicationBloc.auth = widget.auth;
       });
       customMarker();
@@ -66,7 +66,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   }
 
   onSearch(String search) {
-    print("");
+    log("");
   }
 
   void setPolylines() async {
@@ -110,7 +110,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     log("[data fetched and put into the model] ${data.length}");
 
     setState(() {
-      LatLng co = LatLng(28.70448061865909, 77.25660755168144);
+      LatLng co = const LatLng(28.70448061865909, 77.25660755168144);
       dtuMarkers.add(manualMarker(co, 'BHAJANPURA'));
       for (int i = 0; i < data.length; i++) {
         dtuMarkers.add(manualMarker(
@@ -153,7 +153,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             Provider.of<ApplicationBloc>(context, listen: false);
         setState(() {
           destinationMarker = Marker(
-            markerId: MarkerId(title),  
+            markerId: MarkerId(title),
             position: latLng,
             //icon: customIcon,
           );
@@ -203,7 +203,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(15.0),
-                    child: Text('$title',
+                    child: Text(title,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.montserrat(
                           fontSize: 20,
@@ -293,7 +293,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   borderRadius: BorderRadius.circular(30),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
                   child: Autocomplete<Marker>(
                     displayStringForOption: (Marker option) {
                       return option.markerId.value;
@@ -306,15 +306,15 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                         onEditingComplete: onEditing,
                         onChanged: (value) => onSearch(value),
                         onTap: () {
-                          print("show list");
+                          log("show list");
                         },
-                        style: TextStyle(
+                        style: const TextStyle(
                           decorationColor: Colors.black,
                           color: Colors.black,
                         ),
                         //controller: _passwordController,
                         cursorColor: Colors.black,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           prefixIcon: Icon(
                             Icons.search,
                             color: Colors.black,
@@ -327,10 +327,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                     },
                     optionsViewBuilder: (context, onSelected, options) {
                       return Align(
-                        alignment: Alignment(-0.25, -1),
+                        alignment: const Alignment(-0.25, -1),
                         child: Material(
                           elevation: 4,
-                          child: Container(
+                          child: SizedBox(
                             height: 110.00 * options.length,
                             width: MediaQuery.of(context).size.width * 0.7,
                             child: ListView.separated(
@@ -347,7 +347,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                                   );
                                 },
                                 separatorBuilder: (context, index) {
-                                  return Divider();
+                                  return const Divider();
                                 },
                                 itemCount: options.length),
                           ),
@@ -366,7 +366,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                               applicationBloc.currentLocation!.latitude,
                               applicationBloc.currentLocation!.longitude)));
                       if (textEditingValue.text == '') {
-                        return Iterable<Marker>.empty();
+                        return const Iterable<Marker>.empty();
                       }
                       return dtuMarkers.toSet().toList().where((Marker option) {
                         return option.markerId.value.contains(
@@ -454,43 +454,80 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           ),
                   ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(30, 0, 30, 20),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                elevation: 5,
-                minimumSize: const Size(167, 50),
-                shadowColor: Colors.black,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30),
-                ),
-                backgroundColor: const Color.fromARGB(255, 0, 255, 162),
-                primary: Colors.black,
-              ),
-              onPressed: () {
-                // "button pressedaaaa");
-                setState(() {
-                  firstTimeCamera = true;
-                });
-                updateCameraLocation(
-                    LatLng(applicationBloc.currentLocation!.latitude,
-                        applicationBloc.currentLocation!.longitude),
-                    dtuMarkers.first.position,
-                    mapController);
-                
-              },
-              child: Center(
-                child: Text(
-                  "Find Nearest Local Admin",
-                  style: GoogleFonts.poppins(
-                    textStyle: const TextStyle(
-                        color: Color(0xFF000000),
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700),
+          Row(
+            //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(30, 0, 20, 20),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    elevation: 5,
+                    minimumSize: const Size(180, 50),
+                    shadowColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    backgroundColor: const Color.fromARGB(255, 0, 255, 162),
+                    primary: Colors.black,
+                  ),
+                  onPressed: () {
+                    // "button pressedaaaa");
+                    setState(() {
+                      firstTimeCamera = true;
+                    });
+                    updateCameraLocation(
+                        LatLng(applicationBloc.currentLocation!.latitude,
+                            applicationBloc.currentLocation!.longitude),
+                        dtuMarkers.first.position,
+                        mapController);
+                  },
+                  child: Center(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: Text(
+                        "Find Nearest Local Admin",
+                        style: GoogleFonts.poppins(
+                          textStyle: const TextStyle(
+                              color: Color(0xFF000000),
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                child: TextButton(
+                  style: TextButton.styleFrom(
+                    elevation: 5,
+                    minimumSize: const Size(80, 50),
+                    shadowColor: Colors.black,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    backgroundColor: Colors.red,
+                    primary: Colors.black,
+                  ),
+                  onPressed: () {
+                    // "button pressedaaaa");
+                    log('[Panic Button Pressed]: message sent to the device id dZcNjZQhQp2DQ4TNNeqzSV:APA91bG3tDK2sekUQRcobIVwouor9cRhnOmI9sTBc5olPieWNkE5Yc2FgqDF27NbmND6lgRebuDN7fu1i30_1ec37q4lgtZyIjqcE29cS2_Ydnn3S7bUV6To0o-ygAJMTNWZCDDcROvr');
+                  },
+                  child: Center(
+                    child: Text(
+                      "PANIC",
+                      style: GoogleFonts.poppins(
+                        textStyle: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ],
       ),

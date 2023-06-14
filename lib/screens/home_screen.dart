@@ -1,22 +1,19 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:ui';
 
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:bloodbuddyfinal/blocs/application_bloc.dart';
 import 'package:bloodbuddyfinal/main.dart';
 import 'package:bloodbuddyfinal/models/markers_model.dart';
 import 'package:bloodbuddyfinal/screens/dashboard_screen.dart';
 import 'package:bloodbuddyfinal/screens/notifications_screen.dart';
 import 'package:bloodbuddyfinal/screens/settings_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:provider/provider.dart';
-import 'dart:async';
-
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -48,6 +45,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    
     super.initState();
   }
 
@@ -60,11 +58,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       _selectedIndex = index;
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-        print(message.data);
+        log(message.data.toString());
         RemoteNotification? notification = message.notification;
         AndroidNotification? android = message.notification?.android;
         if (notification != null && android != null) {
-          print(notification.body);
+          log(notification.body.toString());
           flutterLocalNotificationsPlugin.show(
             notification.hashCode,
             notification.title,
@@ -88,7 +86,7 @@ class _HomeScreenState extends State<HomeScreen> {
       });
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp message was published!');
+      log('A new onMessageOpenedApp message was published!');
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
@@ -219,7 +217,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final applicationBloc = Provider.of<ApplicationBloc>(context);
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[

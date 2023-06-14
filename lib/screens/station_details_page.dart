@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
@@ -194,7 +196,7 @@ Future<Map<String, dynamic>> getDirections(
   var response = await http.get(Uri.parse(url));
   //print(response.body);
   var json = convert.jsonDecode(response.body);
-  //print(json);
+  log(json.toString());
   var results = {
     'bounds_ne': json['routes'][0]['bounds']['northeast'],
     'bounds_sw': json['routes'][0]['bounds']['southwest'],
@@ -206,6 +208,7 @@ Future<Map<String, dynamic>> getDirections(
   };
   //print(results['polyline_decoded']);
   return results;
+  
 }
 
 void snackbar(BuildContext context) {

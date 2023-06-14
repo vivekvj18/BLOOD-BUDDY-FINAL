@@ -2,10 +2,7 @@ import 'package:bloodbuddyfinal/models/blood_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
-import 'package:bloodbuddyfinal/screens/otp_page.dart';
-import 'package:bloodbuddyfinal/screens/signup_page.dart';
 import 'package:bloodbuddyfinal/services/firebase_auth_methods.dart';
 
 import 'home_screen.dart';
@@ -61,7 +58,7 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(30, 7.5, 15, 7.5),
+                padding: const EdgeInsets.fromLTRB(30, 7.5, 15, 7.5),
                 child: TextButton(
                   style: TextButton.styleFrom(
                     elevation: 5,
@@ -122,7 +119,7 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(30, 7.5, 15, 7.5),
+                padding: const EdgeInsets.fromLTRB(30, 7.5, 15, 7.5),
                 child: TextButton(
                   style: TextButton.styleFrom(
                     elevation: 5,
@@ -183,7 +180,7 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(30, 7.5, 15, 7.5),
+                padding: const EdgeInsets.fromLTRB(30, 7.5, 15, 7.5),
                 child: TextButton(
                   style: TextButton.styleFrom(
                     elevation: 5,
@@ -244,7 +241,7 @@ class _BloodGroupScreenState extends State<BloodGroupScreen> {
           Row(
             children: [
               Padding(
-                padding: EdgeInsets.fromLTRB(30, 7.5, 15, 7.5),
+                padding: const EdgeInsets.fromLTRB(30, 7.5, 15, 7.5),
                 child: TextButton(
                   style: TextButton.styleFrom(
                     elevation: 5,
